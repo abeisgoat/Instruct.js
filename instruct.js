@@ -21,7 +21,7 @@
         self.funcs = {};
 
         //Makes a new interaction
-        self.add = function (func, validators) {
+        self.instruct = function (func, validators) {
             var funcKey = self.getFuncKey(func);
             self.funcs[funcKey] = func;
             return self.wrap(funcKey);
@@ -68,7 +68,7 @@
             self.callFunc(funcKey, args);
         });
 
-        return self.add;
+        return self.instruct;
     };
     
     setup = function (isNode) {
