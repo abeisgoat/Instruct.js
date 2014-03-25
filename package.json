@@ -1,0 +1,28 @@
+{
+  "name": "Instruct.js",
+  "version": "0.0.0",
+  "description": "Realtime client-to-client sync on the function level",
+  "main": "instruct.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/abeisgreat/Instruct.js.git"
+  },
+  "keywords": [
+    "realtime",
+    "firebase",
+    "function",
+    "instruction",
+    "instruct"
+  ],
+  "author": "Abraham Haskins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abeisgreat/Instruct.js/issues"
+  },
+  "devDependencies": {
+    "firebase": "~1.0.11"
+  }
+}
