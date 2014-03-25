@@ -21,9 +21,21 @@
         self.funcs = {};
 
         //Makes a new interaction
-        self.instruct = function (func, validators) {
-            var funcKey = self.getFuncKey(func);
-            self.funcs[funcKey] = func;
+        self.instruct = function (funcId, funcOrValidators, validators) {
+            var funcKey = self.getFuncKey(funcId);
+            
+            if (typeof funcid === 'function') {
+                self.funcs[funcKey] = {func: funcId}   
+            } else if (typeof funcOrValidators === 'function') {
+                self.funcs[funcKey] = {func: funcOrValidators};
+            } else if (typeof funcOrValidators === 'object') {
+                validators = funcOrValidators;
+            }
+            
+            if (self.funcs[funcKey]) {
+                self.funcs[funcKey].validators = validators;
+            }
+            
             return self.wrap(funcKey);
         };
 
@@ -53,12 +65,47 @@
 
         // Call a func from funcKey and the list of args
         self.callFunc = function (funcKey, args) {
-            if (self.funcs[funcKey]) {
-                self.funcs[funcKey].apply(undefined, args);
+            var isValid = self.validateArgs(self.funcs[funcKey], args);
+            
+            if (self.funcs[funcKey] && isValid) {
+                self.funcs[funcKey].func.apply(undefined, args);
+            } else if (self.funcs[funcKey] && !isValid) {
+                throw 'Argument Validation Failed!';
             } else {
                 throw 'Unknown Function Key Called: ' + funcKey;
             }
         };
+        
+        // Get a hash of arguments index -> friendly name for arguments
+        self.getArgNames = function (func) {
+            var args = func.toString().match(/function \((.+)\)/)[1].split(',');
+            var names = {};
+            for (var a=0; a<args.length; a++) {
+                names[a] = args[a].trim();
+            }
+            return names;
+        };
+        
+        // Validate incoming arguments against validation functions
+        self.validateArgs = function (funcData, args) {
+            if (!funcData.validators) return true;
+            if (!args.length) return false;
+            
+            var isValid = true;
+            var argNames = self.getArgNames(funcData.func);
+            var validators = funcData.validators;
+            
+            for (var a=0; (a<args.length && isValid); a++) { 
+                var validator = validators[argNames[a]];
+                if (validators) {
+                    isValid = validator(args[a]) && isValid;
+                } else {
+                    isValid = false;
+                }
+            }
+            
+            return isValid
+        }
         
         // Watch incoming func calls to call on our side
         self.readRef.on("child_added", function (snapshot) {

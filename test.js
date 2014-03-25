@@ -6,8 +6,12 @@
 
     instruct = require('./instruct.js')('https://brilliant-fire-67.firebaseio.com/');
 
-    sayHello = instruct(function (message) {
+    sayHello = instruct('cracka', function (message) {
         console.log("Say:", message);
+    }, {
+        message: function (message) {
+            return typeof message == 'string';
+        }
     });
 
     if (process.argv.length >= 3) {
