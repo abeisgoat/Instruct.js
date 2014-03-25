@@ -1,39 +1,42 @@
+/*global console, require, module*/
 (function () {
+    "use strict";
 
     // Establish the root object, `window` in the browser, or `global` on the server.
-    var root = this; 
+    var root, Instructor, setup, isNode;
+    root = this;
     
     // Create a reference to this
-    var Instructor = function (fString) {
+    Instructor = function (fString) {
         var self = this;
         
-        self._fRef = new root.Firebase(fString);
+        self.fRef = new root.Firebase(fString);
         
-        self._create = function (func, validators) {
+        self.create = function (func, validators) {
             console.log('piepie', func.toString());
-        }
+        };
         
-        return self._create;
+        return self.create;
     };
     
-    var setup = function (isNode) {
+    setup = function (isNode) {
         if (isNode) {
             root.Firebase = require('firebase');
-        }else{
-            // Import script tag
+        } else if (!root.Firebase) {
+            console.log("Please include Firebase.js");
         }
     };
 
-    var isNode = false;
+    isNode = false;
 
     // Export the Instruce object for **CommonJS**, with backwards-compatibility
     // for the old `require()` API. If we're not in CommonJS, add `_` to the
     // global object.
     if (typeof module !== 'undefined' && module.exports) {
-            module.exports = Instructor;
-            isNode = true;
+        module.exports = Instructor;
+        isNode = true;
     } else {
-            root.Instructor = Instructor;
+        root.Instructor = Instructor;
     }
     setup(isNode);
-})();
+}());
