@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
+        <script src="../dist/instruct.browser.js"></script>
+        <script>
+            var instruct, sayHello;
+
+            var instruct = Instructor('https://brilliant-fire-67.firebaseio.com/instruct');
+
+            sayHello = instruct('talk', function (message) {
+                console.log("Say:", message);
+            }, {
+                message: function (message) {
+                    return typeof message == 'string';
+                }
+            });
+            
+            console.log('Ready to go!');
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

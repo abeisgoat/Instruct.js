@@ -4,9 +4,9 @@
 
     var instruct, sayHello;
 
-    instruct = require('./instruct.js')('https://brilliant-fire-67.firebaseio.com/');
+    instruct = require('../dist/instruct.node.js')('https://brilliant-fire-67.firebaseio.com/instruct');
 
-    sayHello = instruct('cracka', function (message) {
+    sayHello = instruct('talk', function (message) {
         console.log("Say:", message);
     }, {
         message: function (message) {
